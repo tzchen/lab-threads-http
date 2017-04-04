@@ -13,23 +13,16 @@ public class SortRacer {
 
 	public static void main(String[] args) 
 	{
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
-		Integer[] nums;
-
 		
-		/** Merge Sort **/
-		nums = shuffled((int)Math.pow(10,7), 448); //a list of shuffled 10 million numbers
-
-		System.out.println("Starting merge sort at "+dateFormat.format(new Date()));
-		Sorting.mergeSort(nums);
-		System.out.println("Merge sort finished at "+dateFormat.format(new Date())+" !");
-
+		// Create new threads
+		Thread mThread = new Thread(new Merge());
+		Thread qThread = new Thread(new Quick());
 		
-		/** Quick Sort **/
-		nums = shuffled((int)Math.pow(10,7), 448); //a list of shuffled 10 million numbers
-		System.out.println("Starting quicksort at "+dateFormat.format(new Date()));
-		Sorting.quickSort(nums);
-		System.out.println("Quicksort finished at "+dateFormat.format(new Date())+" !");
+		// Start threads
+		mThread.start();
+		qThread.start();
+		
+
 	}
 	
 	
@@ -50,6 +43,29 @@ public class SortRacer {
 		else
 			Collections.shuffle(nums);
 		return nums.toArray(new Integer[0]);		
+	}
+
+	public static class Merge implements Runnable {
+		public void run() {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
+			Integer[] nums;	
+			nums = shuffled((int)Math.pow(10,7), 448); //a list of shuffled 10 million numbers
+
+			System.out.println("Starting merge sort at "+dateFormat.format(new Date()));
+			Sorting.mergeSort(nums);
+			System.out.println("Merge sort finished at "+dateFormat.format(new Date())+" !");
+		}
+	}
+
+	public static class Quick implements Runnable {
+		public void run() {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
+			Integer[] nums;
+			nums = shuffled((int)Math.pow(10,7), 448); //a list of shuffled 10 million numbers
+			System.out.println("Starting quicksort at "+dateFormat.format(new Date()));
+			Sorting.quickSort(nums);
+			System.out.println("Quicksort finished at "+dateFormat.format(new Date())+" !");
+		}
 	}
 	
 }

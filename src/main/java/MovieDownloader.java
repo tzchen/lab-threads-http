@@ -18,6 +18,8 @@ import java.util.Scanner;
  */
 public class MovieDownloader {
 
+
+	// Downloads movie data from omdb
 	public static String[] downloadMovieData(String movie) {
 
 		//construct the url for the omdbapi API
@@ -37,27 +39,34 @@ public class MovieDownloader {
 
 			URL url = new URL(urlString);
 
+			// connects to set url
 			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod("GET");
 			urlConnection.connect();
 
-			InputStream inputStream = urlConnection.getInputStream();
+			// uses connection to set up a reader
+			InputStream inputStream = urlConnection.getInputStream();  // inputStream reads bytes to chars
 			StringBuffer buffer = new StringBuffer();
 			if (inputStream == null) {
 				return null;
 			}
+			// BufferedReader reads text from InputStream
 			reader = new BufferedReader(new InputStreamReader(inputStream));
 
+			// read in input line by line
 			String line = reader.readLine();
 			while (line != null) {
 				buffer.append(line + "\n");
 				line = reader.readLine();
 			}
 
+			// return null if there is nothing left in the buffer
 			if (buffer.length() == 0) {
 				return null;
 			}
+			// Store text remaining in buffer
 			String results = buffer.toString();
+			// Format as JSON
 			results = results.replace("{\"Search\":[","");
 			results = results.replace("]}","");
 			results = results.replace("},", "},\n");
@@ -66,7 +75,8 @@ public class MovieDownloader {
 		} 
 		catch (IOException e) {
 			return null;
-		} 
+		}
+		// ends connection 
 		finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
